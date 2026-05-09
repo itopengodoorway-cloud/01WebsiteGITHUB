@@ -4,15 +4,21 @@ import {
   Video, 
   MessageSquare, 
   TrendingUp, 
-  ChevronRight, 
+  ChevronRight,
+  Target,
+  Sparkles,
+  ArrowRight,
+  TrendingDown,
+  Calendar
 } from "lucide-react";
 import Link from "next/link";
+import { format } from "date-fns";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabase();
   const { data: { session } } = await supabase.auth.getSession();
 
-  if (!session) return null; // Should be handled by middleware/layout
+  if (!session) return null;
 
   const { data: profileData } = await supabase
     .from("profiles")
@@ -33,110 +39,169 @@ export default async function DashboardPage() {
 
   const isPremium = !!subscription;
 
-  return (
-    <div className="px-4 py-8 md:px-8 md:py-12">
-      <div className="mx-auto max-w-5xl">
-        {!isEmailVerified && (
-          <div className="mb-8 rounded-2xl bg-red-50 px-6 py-4 text-sm text-red-800 border border-red-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 font-medium">
-              <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
-              Please verify your email to unlock all features.
-            </div>
-            <button className="text-sm font-bold underline hover:no-underline underline-offset-4">Resend Verification</button>
-          </div>
-        )}
+  // Fetch recent handicap history for the teaser
+  const { data: history } = await supabase
+    .from("handicap_history")
+    .select("handicap, created_at")
+    .eq("user_id", session.user.id)
+    .order("created_at", { ascending: false })
+    .limit(3);
 
-        <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+  return (
+    <div className="px-4 py-8 md:px-10 md:py-12 max-w-7xl mx-auto">
+      {!isEmailVerified && (
+        <div className="mb-8 rounded-3xl bg-red-50 px-6 py-4 text-sm text-red-800 border border-red-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+            Please verify your email to unlock all coaching features.
+          </div>
+          <button className="text-sm font-black underline hover:no-underline underline-offset-4">Resend Link</button>
+        </div>
+      )}
+
+      {/* Header Section */}
+      <header className="mb-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-[color:var(--muted)] mb-3">Player Statistics</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-[color:var(--secondary)]">Welcome, {name}</h1>
+            <div className="flex items-center gap-2 mb-3">
+              <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isPremium ? 'bg-[color:var(--accent)] text-[color:var(--secondary)]' : 'bg-[color:var(--primary)] text-white'}`}>
+                {isPremium ? 'Premium Member' : 'Free Account'}
+              </span>
+              <span className="text-[10px] font-bold text-[color:var(--muted)] uppercase tracking-widest flex items-center gap-1">
+                <Calendar className="h-3 w-3" /> {format(new Date(), "MMMM yyyy")}
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black text-[color:var(--secondary)] tracking-tight">
+              Good morning, <span className="text-[color:var(--primary)]">{name.split(' ')[0]}</span>.
+            </h1>
+            <p className="mt-4 text-[color:var(--muted)] max-w-xl font-medium leading-relaxed">
+              Your next goal is to break <span className="text-[color:var(--secondary)] font-bold">85</span>. 
+              Certified coaches are ready to review your latest swing.
+            </p>
           </div>
           
-          <Link href="/dashboard/handicap" className="group flex items-center gap-4 rounded-[32px] bg-white border border-[color:var(--border)] p-2 pr-6 shadow-sm hover:border-[color:var(--primary)] transition-all">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--primary)] text-white font-black text-xl">
-              {handicap}
-            </div>
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--muted)]">Handicap Index</p>
-              <div className="flex items-center gap-1 text-sm font-bold text-[color:var(--secondary)]">
-                Track Progress <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard/handicap" className="hidden sm:flex flex-col items-end group">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--muted)] mb-1">Current Handicap</span>
+              <div className="flex items-center gap-3">
+                <span className="text-4xl font-black text-[color:var(--secondary)]">{handicap}</span>
+                <div className="h-10 w-10 rounded-2xl bg-[color:var(--primary)]/5 flex items-center justify-center group-hover:bg-[color:var(--primary)] group-hover:text-white transition-all">
+                  <TrendingDown className="h-5 w-5" />
+                </div>
               </div>
-            </div>
-          </Link>
-        </header>
-
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Main Stats */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="grid gap-6 sm:grid-cols-2">
-              <DashboardCard 
-                title="Next Lesson" 
-                value="Correcting Slice" 
-                subtitle="Premium Drills" 
-                icon={<Video className="h-5 w-5 text-[color:var(--primary)]" />}
-              />
-              <DashboardCard 
-                title="Messages" 
-                value="2 Pending" 
-                subtitle="From Head Coach" 
-                icon={<MessageSquare className="h-5 w-5 text-[color:var(--primary)]" />}
-              />
-            </div>
-
-            <div className="rounded-[40px] border border-[color:var(--border)] bg-white p-8 shadow-sm">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-xl font-bold text-[color:var(--secondary)]">Recent Coaching Content</h3>
-                <button className="text-sm font-bold text-[color:var(--primary)] hover:underline">View All</button>
-              </div>
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center justify-between rounded-3xl bg-[color:var(--background)] p-4 hover:scale-[1.01] transition-transform cursor-pointer">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-2xl bg-white flex items-center justify-center border border-[color:var(--border)]/30">
-                        <Video className="h-5 w-5 text-[color:var(--primary)]" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-[color:var(--secondary)] text-sm">Pro Drill #{i + 14}</p>
-                        <p className="text-xs text-[color:var(--muted)] font-medium">Swing Mechanics • 8 mins</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-[color:var(--muted)]" />
-                  </div>
-                ))}
-              </div>
-            </div>
+            </Link>
           </div>
+        </div>
+      </header>
 
-          {/* Sidebar Cards */}
-          <div className="space-y-8">
-            <div className={`rounded-[40px] p-8 text-white shadow-xl relative overflow-hidden group ${isPremium ? 'bg-[color:var(--secondary)]' : 'bg-[color:var(--primary)]'}`}>
-              <div className="absolute -right-4 -bottom-4 h-32 w-32 bg-white/10 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
-              <p className="text-xs font-black uppercase tracking-widest opacity-70 mb-4">Membership</p>
-              <h3 className="text-2xl font-bold mb-2">{isPremium ? "Premium Coach" : "Free Plan"}</h3>
-              <p className="text-sm opacity-80 leading-relaxed mb-6">
-                {isPremium 
-                  ? "You have full access to all video libraries and coaching tools." 
-                  : "Upgrade to Premium for full video access and direct 1-on-1 coaching."}
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* Main Content Column */}
+        <div className="lg:col-span-2 space-y-10">
+          
+          {/* Featured CO-CHAT Section */}
+          <section className="relative rounded-[48px] bg-[color:var(--secondary)] p-10 text-white overflow-hidden group shadow-2xl shadow-[color:var(--secondary)]/20">
+            <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:scale-110 transition-transform duration-700">
+              <MessageSquare className="h-40 w-40" />
+            </div>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-6">
+                <Sparkles className="h-5 w-5 text-[color:var(--accent)]" />
+                <span className="text-xs font-black uppercase tracking-[0.3em] text-[color:var(--accent)]">Priority Access</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black mb-4">Start Your <span className="text-[color:var(--accent)]">CO-CHAT</span> Session</h2>
+              <p className="text-white/70 max-w-md mb-8 font-medium leading-relaxed">
+                Upload your swing video now for a frame-by-frame professional analysis by our pro coaches.
               </p>
               <Link 
-                href="/dashboard/upgrade"
-                className={`block w-full text-center rounded-2xl py-3 text-sm font-black transition active:scale-[0.98] ${
-                  isPremium 
-                    ? "bg-white/10 text-white hover:bg-white/20" 
-                    : "bg-[color:var(--accent)] text-[color:var(--secondary)] hover:bg-white"
-                }`}
+                href={isPremium ? "/dashboard/co-chat" : "/dashboard/upgrade"} 
+                className="inline-flex items-center gap-3 rounded-2xl bg-[color:var(--accent)] px-8 py-4 text-sm font-black text-[color:var(--secondary)] hover:bg-white transition-all active:scale-95"
               >
-                {isPremium ? "Manage Subscription" : "Upgrade Now"}
+                {isPremium ? "Open Chat Console" : "Upgrade to Unlock"}
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+          </section>
 
-            <div className="rounded-[40px] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="h-4 w-4 text-[color:var(--primary)]" />
-                <h3 className="font-bold text-[color:var(--secondary)]">Improvement Tip</h3>
+          {/* Quick Stats Grid */}
+          <div className="grid gap-6 sm:grid-cols-2">
+            <Link href="/dashboard/handicap" className="group p-8 rounded-[40px] border border-[color:var(--border)] bg-white hover:border-[color:var(--primary)] transition-all">
+              <div className="flex items-center justify-between mb-8">
+                <div className="h-12 w-12 rounded-2xl bg-[color:var(--primary)]/5 flex items-center justify-center text-[color:var(--primary)]">
+                  <TrendingDown className="h-6 w-6" />
+                </div>
+                <ChevronRight className="h-5 w-5 text-[color:var(--muted)] group-hover:translate-x-1 transition-transform" />
               </div>
-              <p className="text-sm leading-7 text-[color:var(--muted)]">
-                Consistent practice of the "T-Drill" from your library could lower your handicap by up to 2.4 strokes in the next month.
+              <h3 className="text-sm font-black uppercase tracking-widest text-[color:var(--muted)] mb-2">Handicap Trend</h3>
+              <div className="flex items-end gap-3">
+                <span className="text-3xl font-black text-[color:var(--secondary)]">-1.2</span>
+                <span className="text-xs font-bold text-green-600 mb-1.5">v Last Month</span>
+              </div>
+              {/* Mini history teaser */}
+              <div className="mt-6 flex items-center gap-1">
+                {history?.map((h, i) => (
+                   <div key={i} className="flex-1 h-1 bg-[color:var(--background)] rounded-full overflow-hidden">
+                      <div className="h-full bg-[color:var(--primary)]" style={{ width: `${(1 / (h.handicap || 1)) * 500}%` }}></div>
+                   </div>
+                ))}
+              </div>
+            </Link>
+
+            <Link href="/dashboard/libraries" className="group p-8 rounded-[40px] border border-[color:var(--border)] bg-white hover:border-[color:var(--primary)] transition-all">
+              <div className="flex items-center justify-between mb-8">
+                <div className="h-12 w-12 rounded-2xl bg-[color:var(--primary)]/5 flex items-center justify-center text-[color:var(--primary)]">
+                  <Video className="h-6 w-6" />
+                </div>
+                <ChevronRight className="h-5 w-5 text-[color:var(--muted)] group-hover:translate-x-1 transition-transform" />
+              </div>
+              <h3 className="text-sm font-black uppercase tracking-widest text-[color:var(--muted)] mb-2">Video Progress</h3>
+              <div className="flex items-end gap-3">
+                <span className="text-3xl font-black text-[color:var(--secondary)]">14</span>
+                <span className="text-xs font-bold text-[color:var(--muted)] mb-1.5">Drills Completed</span>
+              </div>
+              <div className="mt-6 h-1 w-full bg-[color:var(--background)] rounded-full">
+                <div className="h-full bg-[color:var(--accent)] w-2/3 rounded-full"></div>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Sidebar Column */}
+        <div className="space-y-8">
+          {/* Subscription Status Card */}
+          <div className={`rounded-[40px] p-8 text-white shadow-xl relative overflow-hidden group ${isPremium ? 'bg-[color:var(--primary)]' : 'bg-gradient-to-br from-[color:var(--primary)] to-[color:var(--secondary)]'}`}>
+            <div className="absolute -right-4 -bottom-4 h-32 w-32 bg-white/10 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-70 mb-4">Membership Tier</p>
+            <h3 className="text-2xl font-black mb-2">{isPremium ? "Premium Coach" : "Free Starter"}</h3>
+            <p className="text-sm opacity-80 font-medium leading-relaxed mb-8">
+              {isPremium 
+                ? "Your full access to all professional coaching materials is active until the end of the month." 
+                : "Unlock 1-on-1 video feedback and 200+ exclusive pro drills today."}
+            </p>
+            <Link 
+              href="/dashboard/upgrade"
+              className={`block w-full text-center rounded-2xl py-4 text-xs font-black uppercase tracking-widest transition active:scale-[0.98] ${
+                isPremium 
+                  ? "bg-white/10 text-white hover:bg-white/20 border border-white/20" 
+                  : "bg-[color:var(--accent)] text-[color:var(--secondary)] hover:bg-white shadow-lg shadow-black/20"
+              }`}
+            >
+              {isPremium ? "Manage Subscription" : "Upgrade to Premium"}
+            </Link>
+          </div>
+
+          {/* Quick Links / Tips */}
+          <div className="rounded-[40px] border border-[color:var(--border)] bg-[color:var(--surface)] p-8">
+            <h3 className="text-sm font-black uppercase tracking-widest text-[color:var(--secondary)] mb-6 flex items-center gap-2">
+              <Target className="h-4 w-4" /> Focus Drills
+            </h3>
+            <div className="space-y-4">
+              <QuickLinkItem title="The 3-Foot Circle" icon={<Target className="h-4 w-4" />} />
+              <QuickLinkItem title="Weight Shift Reset" icon={<TrendingUp className="h-4 w-4" />} />
+              <QuickLinkItem title="Tempo Timing" icon={<Video className="h-4 w-4" />} />
+            </div>
+            <div className="mt-8 pt-8 border-t border-[color:var(--border)]/50">
+              <p className="text-[11px] font-bold text-[color:var(--muted)] leading-relaxed italic">
+                "Golf is a game of misses. The player who misses the best wins."
               </p>
             </div>
           </div>
@@ -146,19 +211,16 @@ export default async function DashboardPage() {
   );
 }
 
-function DashboardCard({ title, value, subtitle, icon }: { title: string; value: string; subtitle: string; icon: React.ReactNode }) {
+function QuickLinkItem({ title, icon }: { title: string; icon: React.ReactNode }) {
   return (
-    <div className="rounded-[32px] border border-[color:var(--border)] bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between mb-4">
-        <div className="h-10 w-10 rounded-2xl bg-[color:var(--background)] flex items-center justify-center">
+    <div className="flex items-center justify-between group cursor-pointer">
+      <div className="flex items-center gap-3">
+        <div className="h-8 w-8 rounded-xl bg-white border border-[color:var(--border)]/30 flex items-center justify-center text-[color:var(--primary)] shadow-sm">
           {icon}
         </div>
+        <span className="text-sm font-bold text-[color:var(--secondary)] group-hover:text-[color:var(--primary)] transition-colors">{title}</span>
       </div>
-      <div>
-        <p className="text-[10px] font-black uppercase tracking-widest text-[color:var(--muted)]">{title}</p>
-        <p className="mt-1 text-xl font-bold text-[color:var(--secondary)]">{value}</p>
-        <p className="text-xs font-medium text-[color:var(--muted)]">{subtitle}</p>
-      </div>
+      <ChevronRight className="h-4 w-4 text-[color:var(--muted)] opacity-0 group-hover:opacity-100 transition-all" />
     </div>
   );
 }

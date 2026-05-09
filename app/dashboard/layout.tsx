@@ -7,10 +7,17 @@ import {
   Settings,
   LayoutDashboard,
   Lock,
-  Crown
+  Crown,
+  UserCircle,
+  HelpCircle,
+  ShieldAlert,
+  LogOut
 } from "lucide-react";
 import Link from "next/link";
 import SidebarLink from "./SidebarLink";
+
+// List of admin emails for the restricted "Admin Dashboard" link
+const ADMIN_EMAILS = ["itopengodoorway@gmail.com", "admin@iogdoorway.com"];
 
 export default async function DashboardLayout({
   children,
@@ -32,6 +39,7 @@ export default async function DashboardLayout({
     .maybeSingle();
 
   const isPremium = !!subscription;
+  const isAdmin = ADMIN_EMAILS.includes(session.user.email ?? "");
 
   return (
     <div className="min-h-screen bg-[color:var(--background)] flex text-[color:var(--foreground)]">
@@ -43,23 +51,51 @@ export default async function DashboardLayout({
           </Link>
         </div>
         
-        <nav className="flex-1 space-y-2">
+        <nav className="flex-1 space-y-1 overflow-y-auto pr-2 custom-scrollbar">
+          <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--muted)] mb-2">Main Menu</p>
           <SidebarLink href="/dashboard" icon={<LayoutDashboard className="h-5 w-5" />}>Dashboard</SidebarLink>
+          <SidebarLink href="/dashboard/libraries" icon={<Video className="h-5 w-5" />}>Video Libraries</SidebarLink>
+          <SidebarLink href="/dashboard/co-chat" icon={<MessageSquare className="h-5 w-5" />} disabled={!isPremium}>CO-CHAT</SidebarLink>
           <SidebarLink href="/dashboard/handicap" icon={<Trophy className="h-5 w-5" />}>Handicap Tracker</SidebarLink>
-          <SidebarLink href="#" icon={<Video className="h-5 w-5" />} disabled={!isPremium}>Video Library</SidebarLink>
-          <SidebarLink href="#" icon={<MessageSquare className="h-5 w-5" />} disabled={!isPremium}>Coaching Chat</SidebarLink>
+          
+          <div className="pt-6">
+            <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--muted)] mb-2">Account</p>
+            <SidebarLink href="/dashboard/profile" icon={<UserCircle className="h-5 w-5" />}>My Profile</SidebarLink>
+            <SidebarLink href="/dashboard/upgrade" icon={<Crown className="h-5 w-5 text-[color:var(--accent)]" />}>
+              {isPremium ? "Membership" : "Upgrade to Premium"}
+            </SidebarLink>
+            <SidebarLink href="/dashboard/settings" icon={<Settings className="h-5 w-5" />}>Settings</SidebarLink>
+          </div>
+
+          <div className="pt-6">
+            <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--muted)] mb-2">Support</p>
+            <SidebarLink href="/dashboard/how-it-works-internal" icon={<HelpCircle className="h-5 w-5" />}>How It Works</SidebarLink>
+          </div>
+
+          {isAdmin && (
+            <div className="pt-6">
+              <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-red-600 mb-2">Staff Only</p>
+              <SidebarLink href="/dashboard/admin" icon={<ShieldAlert className="h-5 w-5" />}>Admin Panel</SidebarLink>
+            </div>
+          )}
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-[color:var(--border)] space-y-2">
-          <SidebarLink href="/dashboard/upgrade" icon={<Crown className="h-5 w-5 text-[color:var(--accent)]" />}>
-            {isPremium ? "Membership" : "Upgrade to Premium"}
-          </SidebarLink>
-          <SidebarLink href="/dashboard/profile" icon={<Settings className="h-5 w-5" />}>Settings</SidebarLink>
+        <div className="mt-auto pt-6 border-t border-[color:var(--border)]">
+          <form action="/auth/signout" method="post">
+            <button 
+              type="submit"
+              className="flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-sm font-bold text-[color:var(--muted)] hover:bg-red-50 hover:text-red-600 transition-all"
+            >
+              <LogOut className="h-5 w-5" />
+              Sign Out
+            </button>
+          </form>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
+        {/* Mobile Header would go here in Phase 12 */}
         {children}
       </main>
     </div>

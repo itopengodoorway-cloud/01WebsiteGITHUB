@@ -9,7 +9,8 @@ import {
   Sparkles,
   ArrowRight,
   TrendingDown,
-  Calendar
+  Calendar,
+  Play
 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -46,6 +47,24 @@ export default async function DashboardPage() {
     .eq("user_id", session.user.id)
     .order("created_at", { ascending: false })
     .limit(3);
+
+  // Fetch in-progress videos
+  const { data: continueWatching } = await supabase
+    .from("video_progress")
+    .select(`
+      progress_percentage,
+      videos (
+        id,
+        title,
+        thumbnail_url,
+        library_id,
+        duration
+      )
+    `)
+    .eq("user_id", session.user.id)
+    .lt("progress_percentage", 100)
+    .order("last_watched_at", { ascending: false })
+    .limit(4);
 
   return (
     <div className="px-4 py-8 md:px-10 md:py-12 max-w-7xl mx-auto">
@@ -122,9 +141,43 @@ export default async function DashboardPage() {
             </div>
           </section>
 
+          {/* Continue Watching Section */}
+          {continueWatching && continueWatching.length > 0 && (
+             <section>
+                <div className="flex items-center justify-between mb-6 px-2">
+                   <h3 className="text-sm font-black uppercase tracking-widest text-[color:var(--secondary)]">Continue Watching</h3>
+                   <Link href="/dashboard/libraries" className="text-[10px] font-black uppercase tracking-widest text-[color:var(--primary)] hover:underline">View All</Link>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                   {continueWatching.map((item: any) => (
+                      <Link 
+                        key={item.videos.id} 
+                        href={`/dashboard/libraries/${item.videos.library_id}/video/${item.videos.id}`}
+                        className="group flex items-center gap-4 p-3 rounded-[28px] bg-white border border-[color:var(--border)] hover:border-[color:var(--primary)] transition-all shadow-sm"
+                      >
+                         <div className="h-16 w-24 rounded-2xl bg-[color:var(--background)] overflow-hidden shrink-0 relative">
+                            {item.videos.thumbnail_url && <img src={item.videos.thumbnail_url} className="w-full h-full object-cover" />}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/0 transition-colors">
+                               <Play className="h-4 w-4 text-white fill-current opacity-80" />
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
+                               <div className="h-full bg-[color:var(--accent)]" style={{ width: `${item.progress_percentage}%` }}></div>
+                            </div>
+                         </div>
+                         <div className="min-w-0 flex-1 pr-2">
+                            <p className="text-xs font-bold text-[color:var(--secondary)] truncate mb-1">{item.videos.title}</p>
+                            <p className="text-[10px] font-medium text-[color:var(--muted)] uppercase tracking-widest">{item.progress_percentage}% Complete</p>
+                         </div>
+                         <ChevronRight className="h-4 w-4 text-[color:var(--muted)] mr-2" />
+                      </Link>
+                   ))}
+                </div>
+             </section>
+          )}
+
           {/* Quick Stats Grid */}
           <div className="grid gap-6 sm:grid-cols-2">
-            <Link href="/dashboard/handicap" className="group p-8 rounded-[40px] border border-[color:var(--border)] bg-white hover:border-[color:var(--primary)] transition-all">
+            <Link href="/dashboard/handicap" className="group p-8 rounded-[40px] border border-[color:var(--border)] bg-white hover:border-[color:var(--primary)] transition-all text-left">
               <div className="flex items-center justify-between mb-8">
                 <div className="h-12 w-12 rounded-2xl bg-[color:var(--primary)]/5 flex items-center justify-center text-[color:var(--primary)]">
                   <TrendingDown className="h-6 w-6" />
@@ -146,7 +199,7 @@ export default async function DashboardPage() {
               </div>
             </Link>
 
-            <Link href="/dashboard/libraries" className="group p-8 rounded-[40px] border border-[color:var(--border)] bg-white hover:border-[color:var(--primary)] transition-all">
+            <Link href="/dashboard/libraries" className="group p-8 rounded-[40px] border border-[color:var(--border)] bg-white hover:border-[color:var(--primary)] transition-all text-left">
               <div className="flex items-center justify-between mb-8">
                 <div className="h-12 w-12 rounded-2xl bg-[color:var(--primary)]/5 flex items-center justify-center text-[color:var(--primary)]">
                   <Video className="h-6 w-6" />

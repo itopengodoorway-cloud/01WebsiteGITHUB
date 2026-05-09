@@ -23,7 +23,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         },
       });
       if (error) {
@@ -95,8 +95,18 @@ export default function LoginPage() {
           </label>
 
           {mode === "password" ? (
-            <label className="block text-sm font-medium text-[color:var(--secondary)]">
-              Password
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-[color:var(--secondary)]">
+                  Password
+                </label>
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-xs font-semibold text-[color:var(--primary)] hover:text-[color:var(--primary-light)]"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <div className="mt-2 flex items-center rounded-2xl border border-[color:var(--border)] bg-white px-3 py-2 shadow-sm">
                 <Lock className="mr-2 h-4 w-4 text-[color:var(--primary)]" />
                 <input
@@ -108,7 +118,7 @@ export default function LoginPage() {
                   placeholder="Your password"
                 />
               </div>
-            </label>
+            </div>
           ) : null}
 
           {error ? <p className="rounded-2xl bg-[#fee2e2] px-4 py-3 text-sm text-[#991b1b]">{error}</p> : null}

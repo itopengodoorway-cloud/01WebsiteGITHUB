@@ -15,12 +15,25 @@ export default async function DashboardPage() {
     .eq("id", session.user.id)
     .single();
 
-  const name = profileData?.full_name || session.user.email;
+  if (!profileData?.full_name) {
+    redirect("/auth/onboarding");
+  }
+
+  const name = profileData.full_name;
   const handicap = profileData?.current_handicap ?? "not set";
+  const isEmailVerified = session.user.email_confirmed_at;
 
   return (
     <div className="min-h-screen bg-[color:var(--background)] px-4 py-12 text-[color:var(--foreground)]">
-      <div className="mx-auto max-w-5xl rounded-[40px] border border-[color:var(--border)] bg-[color:var(--surface)] p-10 shadow-[0_30px_90px_rgba(10,61,43,0.1)]">
+      <div className="mx-auto max-w-5xl">
+        {!isEmailVerified && (
+          <div className="mb-6 rounded-2xl bg-[#fee2e2] px-6 py-4 text-sm text-[#991b1b] border border-[#fecaca] flex items-center justify-between">
+            <p>Your email is not verified. Please check your inbox for the verification link.</p>
+            <button className="font-bold underline hover:no-underline">Resend email</button>
+          </div>
+        )}
+        
+        <div className="rounded-[40px] border border-[color:var(--border)] bg-[color:var(--surface)] p-10 shadow-[0_30px_90px_rgba(10,61,43,0.1)]">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-[color:var(--muted)]">Dashboard</p>

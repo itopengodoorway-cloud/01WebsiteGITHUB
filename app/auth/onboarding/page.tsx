@@ -62,16 +62,17 @@ export default function OnboardingPage() {
       return;
     }
 
-    const updated = await supabase
+    const { error: upsertError } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        id: session.user.id,
         full_name: fullName,
         current_handicap: handicap ? Number(handicap) : null,
-      })
-      .eq("id", session.user.id);
+        updated_at: new Date().toISOString(),
+      });
 
-    if (updated.error) {
-      setError(updated.error.message);
+    if (upsertError) {
+      setError(upsertError.message);
     } else {
       setMessage("Profile updated successfully. Redirecting to dashboard...");
       setTimeout(() => {

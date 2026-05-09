@@ -121,21 +121,21 @@ ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE message_attachments ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Users can view own profile" ON profiles
+CREATE POLICY "Users can view own profile" ON profiles
     FOR SELECT USING (auth.uid() = id);
-CREATE POLICY IF NOT EXISTS "Users can update own profile" ON profiles
+CREATE POLICY "Users can update own profile" ON profiles
     FOR UPDATE USING (auth.uid() = id);
-CREATE POLICY IF NOT EXISTS "Users can insert own profile" ON profiles
+CREATE POLICY "Users can insert own profile" ON profiles
     FOR INSERT WITH CHECK (auth.uid() = id);
 
-CREATE POLICY IF NOT EXISTS "Users can view own handicap history" ON handicap_history
+CREATE POLICY "Users can view own handicap history" ON handicap_history
     FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own handicap history" ON handicap_history
+CREATE POLICY "Users can insert own handicap history" ON handicap_history
     FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Free libraries visible to all" ON libraries
+CREATE POLICY "Free libraries visible to all" ON libraries
     FOR SELECT USING (NOT is_paid);
-CREATE POLICY IF NOT EXISTS "Paid libraries visible to paid users" ON libraries
+CREATE POLICY "Paid libraries visible to paid users" ON libraries
     FOR SELECT USING (
         is_paid = FALSE OR
         EXISTS (
@@ -145,17 +145,17 @@ CREATE POLICY IF NOT EXISTS "Paid libraries visible to paid users" ON libraries
             AND s.current_period_end > NOW()
         )
     );
-CREATE POLICY IF NOT EXISTS "Admin full access to libraries" ON libraries
+CREATE POLICY "Admin full access to libraries" ON libraries
     FOR ALL USING (auth.jwt() ->> 'role' = 'admin');
 
-CREATE POLICY IF NOT EXISTS "Videos in free libraries visible to all" ON videos
+CREATE POLICY "Videos in free libraries visible to all" ON videos
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM libraries l
             WHERE l.id = videos.library_id AND NOT l.is_paid
         )
     );
-CREATE POLICY IF NOT EXISTS "Videos in paid libraries visible to paid users" ON videos
+CREATE POLICY "Videos in paid libraries visible to paid users" ON videos
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM libraries l
@@ -170,33 +170,33 @@ CREATE POLICY IF NOT EXISTS "Videos in paid libraries visible to paid users" ON 
             )
         )
     );
-CREATE POLICY IF NOT EXISTS "Admin full access to videos" ON videos
+CREATE POLICY "Admin full access to videos" ON videos
     FOR ALL USING (auth.jwt() ->> 'role' = 'admin');
 
-CREATE POLICY IF NOT EXISTS "Users can view own video progress" ON video_progress
+CREATE POLICY "Users can view own video progress" ON video_progress
     FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own video progress" ON video_progress
+CREATE POLICY "Users can insert own video progress" ON video_progress
     FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can update own video progress" ON video_progress
+CREATE POLICY "Users can update own video progress" ON video_progress
     FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can view own subscription" ON subscriptions
+CREATE POLICY "Users can view own subscription" ON subscriptions
     FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can update own subscription" ON subscriptions
+CREATE POLICY "Users can update own subscription" ON subscriptions
     FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own subscription" ON subscriptions
+CREATE POLICY "Users can insert own subscription" ON subscriptions
     FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Admin can view all subscriptions" ON subscriptions
+CREATE POLICY "Admin can view all subscriptions" ON subscriptions
     FOR SELECT USING (auth.jwt() ->> 'role' = 'admin');
 
-CREATE POLICY IF NOT EXISTS "Users can view own chat messages" ON chat_messages
+CREATE POLICY "Users can view own chat messages" ON chat_messages
     FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own chat messages" ON chat_messages
+CREATE POLICY "Users can insert own chat messages" ON chat_messages
     FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Coach can view all messages" ON chat_messages
+CREATE POLICY "Coach can view all messages" ON chat_messages
     FOR SELECT USING (auth.jwt() ->> 'role' = 'admin' OR auth.jwt() ->> 'role' = 'coach');
 
-CREATE POLICY IF NOT EXISTS "Users can view attachments for own messages" ON message_attachments
+CREATE POLICY "Users can view attachments for own messages" ON message_attachments
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM chat_messages cm
@@ -204,7 +204,7 @@ CREATE POLICY IF NOT EXISTS "Users can view attachments for own messages" ON mes
             AND cm.user_id = auth.uid()
         )
     );
-CREATE POLICY IF NOT EXISTS "Users can insert attachments for own messages" ON message_attachments
+CREATE POLICY "Users can insert attachments for own messages" ON message_attachments
     FOR INSERT WITH CHECK (
         EXISTS (
             SELECT 1 FROM chat_messages cm
@@ -212,7 +212,7 @@ CREATE POLICY IF NOT EXISTS "Users can insert attachments for own messages" ON m
             AND cm.user_id = auth.uid()
         )
     );
-CREATE POLICY IF NOT EXISTS "Coach can view all attachments" ON message_attachments
+CREATE POLICY "Coach can view all attachments" ON message_attachments
     FOR SELECT USING (auth.jwt() ->> 'role' = 'admin' OR auth.jwt() ->> 'role' = 'coach');
 
 -- ===========================================

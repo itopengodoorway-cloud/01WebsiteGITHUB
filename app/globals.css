@@ -1,31 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #1f2937;
-  --primary: #9333ea;
-  --primary-light: #a855f7;
-  --secondary: #ec4899;
-  --secondary-light: #f472b6;
-  --accent: #f97316;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --border: #e5e7eb;
-  --muted: #6b7280;
+  --background: #f8f5f0;
+  --surface: #f1ece3;
+  --foreground: #0f2c22;
+  --primary: #0a3d2b;
+  --primary-light: #156a49;
+  --secondary: #0f2c22;
+  --accent: #d4af37;
+  --accent-soft: #f2e4a5;
+  --border: #c8c4b5;
+  --muted: #5f6f61;
+  --shadow: 0 24px 80px rgba(10, 61, 43, 0.12);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-light: var(--primary-light);
   --color-secondary: var(--secondary);
-  --color-secondary-light: var(--secondary-light);
   --color-accent: var(--accent);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-error: var(--error);
+  --color-accent-soft: var(--accent-soft);
   --color-border: var(--border);
   --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
@@ -34,15 +31,39 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #111827;
-    --foreground: #f3f4f6;
-    --border: #374151;
-    --muted: #9ca3af;
+    --background: #0f2c22;
+    --surface: #122e23;
+    --foreground: #f8f5f0;
+    --border: #224c37;
+    --muted: #aac3a2;
+    --accent-soft: #d4af37;
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
+  min-height: 100vh;
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Inter, system-ui, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--secondary);
 }

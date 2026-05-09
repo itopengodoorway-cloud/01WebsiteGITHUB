@@ -72,13 +72,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[color:var(--background)] px-4 py-12 text-[color:var(--foreground)]">
+    <div className="px-4 py-12">
       <div className="mx-auto max-w-2xl">
-        <Link href="/dashboard" className="mb-8 flex items-center gap-2 text-sm font-medium text-[color:var(--muted)] hover:text-[color:var(--primary)] transition-colors">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Link>
-
         <div className="rounded-[40px] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 md:p-10 shadow-[color:var(--shadow)]">
           <div className="mb-10 text-center">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-[color:var(--primary)] text-white shadow-lg">

@@ -145,13 +145,8 @@ export default function HandicapPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[color:var(--background)] px-4 py-12 text-[color:var(--foreground)]">
+    <div className="px-4 py-12">
       <div className="mx-auto max-w-5xl">
-        <Link href="/dashboard" className="mb-8 flex items-center gap-2 text-sm font-medium text-[color:var(--muted)] hover:text-[color:var(--primary)] transition-colors">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Link>
-
         <div className="grid gap-8 lg:grid-cols-[1fr_2fr]">
           {/* Update Section */}
           <div className="space-y-8">

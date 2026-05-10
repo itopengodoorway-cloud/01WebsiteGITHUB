@@ -1,0 +1,22 @@
+
+> codespaces-blank@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 12.8s
+  Running TypeScript ...
+Failed to type check.
+
+./app/api/webhooks/stripe/route.ts:42:55
+Type error: Property 'current_period_start' does not exist on type 'Response<Subscription>'.
+
+  [90m40 |[0m ...tripe_subscription_id: subscriptionId,
+  [90m41 |[0m ...tatus: subscription.status,
+[31m[1m>[0m [90m42 |[0m ...urrent_period_start: [36mnew[0m [33mDate[0m(subscription.current_period_start * [35m1000[0m).toISOString(),
+  [90m   |[0m                                               [31m[1m^[0m
+  [90m43 |[0m ...urrent_period_end: [36mnew[0m [33mDate[0m(subscription.current_period_end * [35m1000[0m).toISOString(),
+  [90m44 |[0m ...pdated_at: [36mnew[0m [33mDate[0m().toISOString(),
+  [90m45 |[0m ...
+Next.js build worker exited with code: 1 and signal: null

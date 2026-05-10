@@ -1,0 +1,143 @@
+
+> codespaces-blank@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 6 errors:
+./app/dashboard/co-chat/page.tsx:281:9
+Expected '</', got ')'
+  [90m279 |[0m             </div>
+  [90m280 |[0m           </div>
+[31m[1m>[0m [90m281 |[0m         ))}
+  [90m    |[0m         [31m[1m^[0m
+  [90m282 |[0m         <div ref={messagesEndRef} />
+  [90m283 |[0m       </div>
+  [90m284 |[0m
+
+Parsing ecmascript source code failed
+
+
+./app/dashboard/admin/VideoAnnotationTool.tsx:4:1
+Module not found: Can't resolve 'react-konva'
+  [90m2 |[0m
+  [90m3 |[0m [36mimport[0m { useState, useRef, useEffect } [36mfrom[0m [32m'react'[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { [33mStage[0m, [33mLayer[0m, [33mLine[0m, [33mCircle[0m, [33mRect[0m } [36mfrom[0m [32m'react-konva'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m5 |[0m [36mimport[0m { 
+  [90m6 |[0m   [33mX[0m, 
+  [90m7 |[0m   [33mSquare[0m,
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/dashboard/admin/VideoAnnotationTool.tsx [Client Component Browser]
+    ./app/dashboard/admin/AdminChatConsole.tsx [Client Component Browser]
+    ./app/dashboard/admin/AdminChatConsole.tsx [Server Component]
+    ./app/dashboard/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/dashboard/admin/VideoAnnotationTool.tsx [Client Component SSR]
+    ./app/dashboard/admin/AdminChatConsole.tsx [Client Component SSR]
+    ./app/dashboard/admin/AdminChatConsole.tsx [Server Component]
+    ./app/dashboard/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./app/dashboard/handicap/page.tsx:6:1
+Module not found: Can't resolve 'sonner'
+  [90m4 |[0m [36mimport[0m { supabase } [36mfrom[0m [32m"@/lib/supabase-browser"[0m;
+  [90m5 |[0m [36mimport[0m { useRouter } [36mfrom[0m [32m"next/navigation"[0m;
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { toast } [36mfrom[0m [32m"sonner"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m [36mimport[0m { motion } [36mfrom[0m [32m"framer-motion"[0m;
+  [90m8 |[0m [36mimport[0m { 
+  [90m9 |[0m   [33mTrendingDown[0m,
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/dashboard/handicap/page.tsx [Client Component Browser]
+    ./app/dashboard/handicap/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/dashboard/handicap/page.tsx [Client Component SSR]
+    ./app/dashboard/handicap/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./app/dashboard/profile/page.tsx:8:1
+Module not found: Can't resolve 'sonner'
+  [90m 6 |[0m [36mimport[0m { [33mUser[0m, [33mMail[0m, [33mFileText[0m, [33mSave[0m, [33mLoader2[0m, [33mArrowLeft[0m } [36mfrom[0m [32m"lucide-react"[0m;
+  [90m 7 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+[31m[1m>[0m [90m 8 |[0m [36mimport[0m { toast } [36mfrom[0m [32m"sonner"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m [36mimport[0m { motion } [36mfrom[0m [32m"framer-motion"[0m;
+  [90m10 |[0m
+  [90m11 |[0m [36mexport[0m [36mdefault[0m [36mfunction[0m [33mProfilePage[0m() {
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/dashboard/profile/page.tsx [Client Component Browser]
+    ./app/dashboard/profile/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/dashboard/profile/page.tsx [Client Component SSR]
+    ./app/dashboard/profile/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./app/layout.tsx:3:1
+Module not found: Can't resolve 'sonner'
+  [90m1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m2 |[0m [36mimport[0m { [33mGeist[0m, [33mGeist_Mono[0m } [36mfrom[0m [32m"next/font/google"[0m;
+[31m[1m>[0m [90m3 |[0m [36mimport[0m { [33mToaster[0m } [36mfrom[0m [32m"sonner"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m4 |[0m [36mimport[0m [32m"./globals.css"[0m;
+  [90m5 |[0m
+  [90m6 |[0m [36mconst[0m geistSans = [33mGeist[0m({
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./lib/stripe.ts:1:1
+Module not found: Can't resolve 'stripe'
+[31m[1m>[0m [90m1 |[0m [36mimport[0m [33mStripe[0m [36mfrom[0m [32m'stripe'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m
+  [90m3 |[0m [36mexport[0m [36mconst[0m stripe = [36mnew[0m [33mStripe[0m(process.env.[33mSTRIPE_SECRET_KEY[0m!, {
+  [90m4 |[0m   apiVersion: [32m'2025-01-27'[0m, [90m// Use a stable version[0m
+
+
+
+Import trace:
+  App Route:
+    ./lib/stripe.ts
+    ./app/api/webhooks/stripe/route.ts
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./app/dashboard/co-chat/page.tsx:281:9)
+    at <unknown> (./app/dashboard/admin/VideoAnnotationTool.tsx:4:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/dashboard/handicap/page.tsx:6:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/dashboard/profile/page.tsx:8:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/layout.tsx:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./lib/stripe.ts:1:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

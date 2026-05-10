@@ -277,7 +277,7 @@ export default function CoChatPage() {
                 {format(new Date(msg.created_at), "h:mm aa")}
               </span>
             </div>
-          </div>
+          </motion.div>
         ))}
         <div ref={messagesEndRef} />
       </div>

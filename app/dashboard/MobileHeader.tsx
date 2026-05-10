@@ -29,7 +29,7 @@ export default function MobileHeader({
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const links = [
+  const links: { href: string; label: string; icon: React.ReactNode; disabled?: boolean; color?: string }[] = [
     { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" /> },
     { href: "/dashboard/libraries", label: "Video Libraries", icon: <Video className="h-5 w-5" /> },
     { href: "/dashboard/co-chat", label: "CO-CHAT", icon: <MessageSquare className="h-5 w-5" />, disabled: !isPremium },

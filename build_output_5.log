@@ -1,0 +1,22 @@
+
+> codespaces-blank@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 12.9s
+  Running TypeScript ...
+Failed to type check.
+
+./app/dashboard/admin/ContentManagement.tsx:214:76
+Type error: Parameter 'v' implicitly has an 'any' type.
+
+  [90m212 |[0m ...? (
+  [90m213 |[0m ...
+[31m[1m>[0m [90m214 |[0m ...[32mary Name"[0m value={formData.name} onChange={(v) => setFormData({...formData, name: v})} ...
+  [90m    |[0m                                               [31m[1m^[0m
+  [90m215 |[0m ...[32mescription"[0m value={formData.description} onChange={(v) => setFormData({...formData, de...
+  [90m216 |[0m ...[32mex items-center gap-4 p-4 rounded-2xl bg-[color:var(--background)]"[0m>
+  [90m217 |[0m ...
+Next.js build worker exited with code: 1 and signal: null

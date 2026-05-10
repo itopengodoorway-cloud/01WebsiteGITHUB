@@ -1,0 +1,22 @@
+
+> codespaces-blank@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 15.4s
+  Running TypeScript ...
+Failed to type check.
+
+./lib/stripe.ts:4:3
+Type error: Type '"2025-01-27"' is not assignable to type '"2026-04-22.dahlia"'.
+
+  [90m2 |[0m
+  [90m3 |[0m [36mexport[0m [36mconst[0m stripe = [36mnew[0m [33mStripe[0m(process.env.[33mSTRIPE_SECRET_KEY[0m!, {
+[31m[1m>[0m [90m4 |[0m   apiVersion: [32m'2025-01-27'[0m, [90m// Use a stable version[0m
+  [90m  |[0m   [31m[1m^[0m
+  [90m5 |[0m   typescript: [36mtrue[0m,
+  [90m6 |[0m });
+  [90m7 |[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const customerId = session.customer as string;
 
     if (userId) {
-      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any;
       
       const { error } = await supabase
         .from("subscriptions")
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
-    const subscription = event.data.object as Stripe.Subscription;
+    const subscription = event.data.object as any;
     const customerId = subscription.customer as string;
 
     const { error } = await supabase

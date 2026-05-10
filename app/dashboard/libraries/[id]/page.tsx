@@ -1,5 +1,5 @@
 import { createServerSupabase } from "@/lib/supabase-server";
-import { Play, ArrowLeft, Clock, Video, Lock, ChevronRight } from "lucide-react";
+import { Play, ArrowLeft, Clock, Video, Lock, ChevronRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 

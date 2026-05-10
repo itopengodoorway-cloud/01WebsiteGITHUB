@@ -1,0 +1,28 @@
+
+> codespaces-blank@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 14.4s
+  Running TypeScript ...
+  Finished TypeScript in 6.2s ...
+  Collecting page data using 1 worker ...
+Error: Missing Supabase environment variables
+    at module evaluation (.next/server/chunks/_0t63zm~._.js:37:54205)
+    at instantiateModule (.next/server/chunks/[turbopack]_runtime.js:853:9)
+    at getOrInstantiateModuleFromParent (.next/server/chunks/[turbopack]_runtime.js:877:12)
+    at Context.esmImport [as i] (.next/server/chunks/[turbopack]_runtime.js:281:20)
+    at module evaluation (.next/server/chunks/[root-of-the-server]__1046zwj._.js:1:1318)
+    at instantiateModule (.next/server/chunks/[turbopack]_runtime.js:853:9)
+    at instantiateRuntimeModule (.next/server/chunks/[turbopack]_runtime.js:882:12)
+    at getOrInstantiateRuntimeModule (.next/server/chunks/[turbopack]_runtime.js:895:12)
+    at Object.m (.next/server/chunks/[turbopack]_runtime.js:898:18)
+    at Object.<anonymous> (.next/server/app/api/checkout/portal/route.js:7:3)
+
+> Build error occurred
+Error: Failed to collect page data for /api/checkout/portal
+    at ignore-listed frames {
+  type: 'Error'
+}

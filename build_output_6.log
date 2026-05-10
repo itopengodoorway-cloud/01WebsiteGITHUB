@@ -1,0 +1,22 @@
+
+> codespaces-blank@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 14.0s
+  Running TypeScript ...
+Failed to type check.
+
+./app/dashboard/libraries/[id]/page.tsx:103:26
+Type error: Cannot find name 'CheckCircle2'.
+
+  [90m101 |[0m                    {progress === [35m100[0m && (
+  [90m102 |[0m                       <span className=[32m"flex items-center gap-1 text-[10px] font-black tex...[0m
+[31m[1m>[0m [90m103 |[0m                         <[33mCheckCircle2[0m className=[32m"h-3 w-3"[0m /> [33mCompleted[0m
+  [90m    |[0m                          [31m[1m^[0m
+  [90m104 |[0m                       </span>
+  [90m105 |[0m                    )}
+  [90m106 |[0m                    {progress > [35m0[0m && progress < [35m100[0m && (
+Next.js build worker exited with code: 1 and signal: null

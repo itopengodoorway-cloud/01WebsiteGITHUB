@@ -160,7 +160,7 @@ export default function AdminContentManagement() {
   );
 }
 
-function ContentModal({ type, item, libraries, onClose, onSuccess }: any) {
+function ContentModal({ type, item, libraries, onClose, onSuccess }: { type: "libraries" | "videos"; item: any; libraries: any[]; onClose: () => void; onSuccess: () => void }) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(item || (type === 'libraries' ? {
     name: "",
@@ -262,7 +262,7 @@ function ContentModal({ type, item, libraries, onClose, onSuccess }: any) {
   );
 }
 
-function Input({ label, value, onChange, type = "text", placeholder, required }: any) {
+function Input({ label, value, onChange, type = "text", placeholder, required }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string; required?: boolean }) {
   return (
     <div className="space-y-2">
       <label className="text-xs font-black uppercase tracking-widest text-[color:var(--muted)] ml-1">{label}</label>
@@ -278,7 +278,7 @@ function Input({ label, value, onChange, type = "text", placeholder, required }:
   );
 }
 
-function Textarea({ label, value, onChange, placeholder }: any) {
+function Textarea({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (
     <div className="space-y-2">
       <label className="text-xs font-black uppercase tracking-widest text-[color:var(--muted)] ml-1">{label}</label>

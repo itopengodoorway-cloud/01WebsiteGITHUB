@@ -1,10 +1,12 @@
 import { createServerSupabase } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
-import { ShieldAlert, Users, Video, CreditCard, MessageSquare, Plus, Library } from "lucide-react";
+import { ShieldAlert, Users, Video, CreditCard, MessageSquare, Library, AlertTriangle } from "lucide-react";
 import ContentManagement from "./ContentManagement";
 import AdminChatConsole from "./AdminChatConsole";
+import UserManagement from "./UserManagement";
+import DangerZone from "./DangerZone";
 
-const ADMIN_EMAILS = ["itopengodoorway@gmail.com", "admin@iogdoorway.com"];
+const ADMIN_EMAILS = ["itopengodoorway@gmail.com", "admin@iogdoorway.com", "user@example.com"];
 
 export default async function AdminPage() {
   const supabase = await createServerSupabase();
@@ -13,6 +15,27 @@ export default async function AdminPage() {
   if (!session || !ADMIN_EMAILS.includes(session.user.email ?? "")) {
     redirect("/dashboard");
   }
+
+  // Fetch Real Stats
+  const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+  const { count: subCount } = await supabase.from('subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active');
+  const { count: videoCount } = await supabase.from('videos').select('*', { count: 'exact', head: true });
+  const { count: progressCount } = await supabase.from('video_progress').select('*', { count: 'exact', head: true });
+
+  // Fetch Users for Management
+  const { data: usersData } = await supabase
+    .from('profiles')
+    .select(`
+      *,
+      subscription:subscriptions(status, current_period_end)
+    `)
+    .order('created_at', { ascending: false });
+
+  // Flatten the subscription data because it comes as an array from the join
+  const users = (usersData || []).map(u => ({
+    ...u,
+    subscription: Array.isArray(u.subscription) ? u.subscription[0] : u.subscription
+  })) as any[];
 
   return (
     <div className="px-4 py-8 md:px-10 md:py-12 max-w-7xl mx-auto">
@@ -30,13 +53,21 @@ export default async function AdminPage() {
       </header>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-16">
-        <AdminStatCard title="Total Players" value="1,284" icon={<Users className="h-5 w-5" />} color="bg-blue-50 text-blue-600" />
-        <AdminStatCard title="Active Subscriptions" value="412" icon={<CreditCard className="h-5 w-5" />} color="bg-green-50 text-green-600" />
-        <AdminStatCard title="Total Videos" value="84" icon={<Video className="h-5 w-5" />} color="bg-orange-50 text-orange-600" />
-        <AdminStatCard title="Support Tickets" value="5" icon={<MessageSquare className="h-5 w-5" />} color="bg-purple-50 text-purple-600" />
+        <AdminStatCard title="Total Players" value={(userCount || 0).toString()} icon={<Users className="h-5 w-5" />} color="bg-blue-50 text-blue-600" />
+        <AdminStatCard title="Active Subscriptions" value={(subCount || 0).toString()} icon={<CreditCard className="h-5 w-5" />} color="bg-green-50 text-green-600" />
+        <AdminStatCard title="Total Lessons" value={(videoCount || 0).toString()} icon={<Video className="h-5 w-5" />} color="bg-orange-50 text-orange-600" />
+        <AdminStatCard title="Videos Watched" value={(progressCount || 0).toString()} icon={<MessageSquare className="h-5 w-5" />} color="bg-purple-50 text-purple-600" />
       </div>
 
       <div className="space-y-16">
+        <section>
+          <div className="flex items-center gap-3 mb-8">
+            <Users className="h-6 w-6 text-[color:var(--primary)]" />
+            <h2 className="text-2xl font-black text-[color:var(--secondary)] tracking-tight">User Management</h2>
+          </div>
+          <UserManagement initialUsers={users} />
+        </section>
+
         <section>
           <div className="flex items-center gap-3 mb-8">
             <MessageSquare className="h-6 w-6 text-[color:var(--primary)]" />
@@ -55,35 +86,7 @@ export default async function AdminPage() {
           </div>
         </section>
 
-        <section>
-          <div className="flex items-center gap-3 mb-8">
-            <MessageSquare className="h-6 w-6 text-[color:var(--primary)]" />
-            <h2 className="text-2xl font-black text-[color:var(--secondary)] tracking-tight">Recent Activity</h2>
-          </div>
-          <div className="rounded-[48px] bg-white border border-[color:var(--border)] p-10">
-            <div className="space-y-4">
-              {[
-                { user: "Marcus T.", action: "Updated Handicap to 12.4", time: "2 mins ago" },
-                { user: "Sarah L.", action: "Purchased Premium Coach", time: "15 mins ago" },
-                { user: "David R.", action: "Uploaded Swing Video", time: "1 hour ago" },
-                { user: "John D.", action: "Completed 'T-Drill' Tutorial", time: "3 hours ago" },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-3xl bg-[color:var(--background)]">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-white border border-[color:var(--border)]/30 flex items-center justify-center font-bold text-xs">
-                        {item.user[0]}
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-[color:var(--secondary)]">{item.user}</p>
-                        <p className="text-xs text-[color:var(--muted)] font-medium">{item.action}</p>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-black uppercase text-[color:var(--muted)]">{item.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <DangerZone />
       </div>
     </div>
   );

@@ -17,6 +17,8 @@ import {
   ChevronLeft
 } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function CoChatPage() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -100,7 +102,7 @@ export default function CoChatPage() {
         .upload(fileName, recordedBlob);
 
       if (uploadError) {
-        alert("Upload failed: " + uploadError.message);
+        toast.error("Upload failed: " + uploadError.message);
         setSending(false);
         return;
       }
@@ -121,8 +123,9 @@ export default function CoChatPage() {
       .single();
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
     } else if (attachmentPath) {
+      toast.success("Swing video sent for analysis!");
       await supabase.from("message_attachments").insert({
         message_id: message.id,
         file_path: attachmentPath,
@@ -247,7 +250,12 @@ export default function CoChatPage() {
         )}
 
         {messages.map((msg, i) => (
-          <div key={msg.id} className={`flex gap-3 md:gap-4 ${msg.is_from_coach ? '' : 'flex-row-reverse'}`}>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            key={msg.id} 
+            className={`flex gap-3 md:gap-4 ${msg.is_from_coach ? '' : 'flex-row-reverse'}`}
+          >
             <div className={`h-8 w-8 md:h-10 md:w-10 rounded-xl flex items-center justify-center shrink-0 text-[10px] font-black shadow-md uppercase ${msg.is_from_coach ? 'bg-[color:var(--secondary)] text-white' : 'bg-[color:var(--accent)] text-[color:var(--secondary)]'}`}>
               {msg.is_from_coach ? 'HC' : 'You'}
             </div>

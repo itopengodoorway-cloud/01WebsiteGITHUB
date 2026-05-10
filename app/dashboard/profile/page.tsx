@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase-browser";
 import { useRouter } from "next/navigation";
 import { User, Mail, FileText, Save, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export default function ProfilePage() {
   const [fullName, setFullName] = useState("");
@@ -56,9 +58,9 @@ export default function ProfilePage() {
       .eq("id", session.user.id);
 
     if (error) {
-      setError(error.message);
+      toast.error(error.message);
     } else {
-      setMessage("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
     }
     setSaving(false);
   };

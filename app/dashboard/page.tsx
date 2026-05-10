@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabase();

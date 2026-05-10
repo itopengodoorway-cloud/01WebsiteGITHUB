@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
 import { 
   TrendingDown, 
   History, 
@@ -115,9 +117,9 @@ export default function HandicapPage() {
       });
 
     if (historyError) {
-      setError(historyError.message);
+      toast.error(historyError.message);
     } else {
-      setMessage("Handicap updated successfully!");
+      toast.success("Handicap updated successfully!");
       fetchHandicapData(); // Refresh history
     }
     setUpdating(false);

@@ -15,9 +15,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import SidebarLink from "./SidebarLink";
+import MobileHeader from "./MobileHeader";
 
 // List of admin emails for the restricted "Admin Dashboard" link
-const ADMIN_EMAILS = ["itopengodoorway@gmail.com", "admin@iogdoorway.com"];
+const ADMIN_EMAILS = ["itopengodoorway@gmail.com", "admin@iogdoorway.com", "user@example.com"];
 
 export default async function DashboardLayout({
   children,
@@ -42,7 +43,9 @@ export default async function DashboardLayout({
   const isAdmin = ADMIN_EMAILS.includes(session.user.email ?? "");
 
   return (
-    <div className="min-h-screen bg-[color:var(--background)] flex text-[color:var(--foreground)]">
+    <div className="min-h-screen bg-[color:var(--background)] flex flex-col lg:flex-row text-[color:var(--foreground)]">
+      <MobileHeader isPremium={isPremium} isAdmin={isAdmin} />
+      
       {/* Sidebar - Desktop */}
       <aside className="w-72 hidden lg:flex flex-col border-r border-[color:var(--border)] bg-[color:var(--surface)] p-6 shrink-0 h-screen sticky top-0">
         <div className="mb-10 px-4 pt-4">
@@ -69,7 +72,7 @@ export default async function DashboardLayout({
 
           <div className="pt-6">
             <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--muted)] mb-2">Support</p>
-            <SidebarLink href="/dashboard/how-it-works-internal" icon={<HelpCircle className="h-5 w-5" />}>How It Works</SidebarLink>
+            <SidebarLink href="/dashboard/how-it-works" icon={<HelpCircle className="h-5 w-5" />}>How It Works</SidebarLink>
           </div>
 
           {isAdmin && (
@@ -95,7 +98,6 @@ export default async function DashboardLayout({
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
-        {/* Mobile Header would go here in Phase 12 */}
         {children}
       </main>
     </div>

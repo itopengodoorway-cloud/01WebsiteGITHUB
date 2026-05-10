@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -62,8 +62,6 @@ export async function middleware(request: NextRequest) {
   }
 
   // If user is signed in and the current path is auth related, redirect to dashboard
-  // (Optional: you might want to allow some auth pages while logged in, 
-  // but usually login/signup should redirect away)
   if (user && (request.nextUrl.pathname.startsWith('/auth/login') || request.nextUrl.pathname.startsWith('/auth/signup'))) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }

@@ -2,6 +2,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import { ShieldAlert, Users, Video, CreditCard, MessageSquare, Plus, Library } from "lucide-react";
 import ContentManagement from "./ContentManagement";
+import AdminChatConsole from "./AdminChatConsole";
 
 const ADMIN_EMAILS = ["itopengodoorway@gmail.com", "admin@iogdoorway.com"];
 
@@ -35,7 +36,15 @@ export default async function AdminPage() {
         <AdminStatCard title="Support Tickets" value="5" icon={<MessageSquare className="h-5 w-5" />} color="bg-purple-50 text-purple-600" />
       </div>
 
-      <div className="space-y-12">
+      <div className="space-y-16">
+        <section>
+          <div className="flex items-center gap-3 mb-8">
+            <MessageSquare className="h-6 w-6 text-[color:var(--primary)]" />
+            <h2 className="text-2xl font-black text-[color:var(--secondary)] tracking-tight">Active Coaching Chats</h2>
+          </div>
+          <AdminChatConsole />
+        </section>
+
         <section>
           <div className="flex items-center gap-3 mb-8">
             <Library className="h-6 w-6 text-[color:var(--primary)]" />
